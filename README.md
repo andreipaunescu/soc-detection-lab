@@ -35,34 +35,17 @@ A small, isolated Security Operations lab for practising telemetry collection, d
 
 | Scenario | Technique | Status |
 |---|---|---|
-| S1 | Initial access via RDP brute force (T1110) | Planned |
+| S1 | Initial access via RDP brute force (T1110) | Published |
 | S2 | Scheduled task persistence (T1053.005) | Planned |
 | S3 to S8 | To be defined | Planned |
 
 Each scenario will have its own folder under `scenarios/`, with the commands run, the expected events and the Splunk searches that detect them. Detections live under `detections/`, one Markdown file per rule.
-
-## Lessons learned
-
-These are the problems that took the most time to solve, and what they taught me.
-
-**Failed logons were missing until the right audit was on.** Windows doesn't log failed logons unless failure auditing is enabled, and enabling success auditing alone isn't enough. Checking the policy with `auditpol /get` before running an attack saved time later.
-
-**Bad passwords show up with a different logon type.** My first detection searched for `LogonType 10` (interactive RDP) for failed logons and found nothing. With Network Level Authentication, a wrong password is rejected before the RDP session starts, so the event is logged as `LogonType 3`. Checking the raw event XML, rather than trusting a field name from a search, was what revealed it.
-
-**Field names differ between raw events and the add-on's mapping.** `Account_Name` and `Failure_Reason` were empty for failed logons, while the raw `TargetUserName` and `SubStatus` fields had the data. For detections, I'll use whichever field names are reliably populated.
-
-**Network profiles and interface addresses don't persist on their own.** A Windows network with no gateway defaults back to the Public profile after a reboot, which blocks RDP. On the Linux side, an address set only in the GUI disappeared after a reboot. Both are fixed by making the setting explicit (a Private profile with a startup task, and a static NetworkManager profile).
-
-**Timestamps need one clock.** Hydra logged in the Kali machine's local time (UTC-5), while Splunk displayed Bucharest time (UTC+2). Setting Kali to UTC and recording all notes in UTC makes correlating events across the lab straightforward.
-
-**Module paths need one root.** Moving tools into a single `C:\lab` folder, and setting the Atomic Red Team path once in the PowerShell profile, removed the need to pass paths manually in every session.
 
 ## Repository layout
 
 ```
 soc-homelab/
 ├── README.md
-├── lab/            setup and runbook (test wordlists and loot stay on Kali)
 ├── scenarios/      attack steps and expected telemetry
 └── detections/     detection rules and their validation
 ```

@@ -46,7 +46,6 @@ Each scenario will have its own folder under `scenarios/`, with the commands run
 ```
 soc-homelab/
 ├── README.md
-├── lab/            setup and runbook (test wordlists and loot stay on Kali)
 ├── scenarios/      attack steps and expected telemetry
 └── detections/     detection rules and their validation
 ```

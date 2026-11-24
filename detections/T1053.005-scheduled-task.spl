@@ -1,0 +1,13 @@
+// Rule ID: SOC-WIN-002
+// MITRE ATT&CK: T1053.005 - Scheduled Task/Job: Scheduled Task
+// Data Source: index=wineventlog (EventCode=4698, 4702)
+// Scenario: ../scenarios/S2-scheduled-task/README.md
+
+index=wineventlog EventCode IN (4698, 4702)
+| where SubjectUserName !="WS01$" AND NOT like(TaskName, "\\Microsoft\\Windows\\%")
+| eval severity=case(
+    match(TaskContent, "(?i)(FromBase64String|EncodedCommand|-enc\b|IEX|Invoke-Expression)"), "critical",
+    match(TaskContent, "(?i)(powershell|\bcmd\b|wscript|cscript|mshta|rundll32|regsvr32)"), "high",
+    1=1, "medium"
+)
+| table _time, host, EventCode, SubjectUserName, TaskName, severity

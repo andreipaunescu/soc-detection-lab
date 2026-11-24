@@ -35,7 +35,7 @@ A small, isolated Security Operations lab for practising telemetry collection, d
 
 | Scenario | Technique | Status |
 |---|---|---|
-| S1 | Initial access via RDP brute force (T1110) | Planned |
+| S1 | Initial access via RDP brute force (T1110) | Published |
 | S2 | Scheduled task persistence (T1053.005) | Planned |
 | S3 to S8 | To be defined | Planned |
 

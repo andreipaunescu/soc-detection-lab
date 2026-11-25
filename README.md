@@ -36,7 +36,7 @@ A small, isolated Security Operations lab for practising telemetry collection, d
 | Scenario | Technique | Status |
 |---|---|---|
 | S1 | Initial access via RDP brute force (T1110) | Published |
-| S2 | Scheduled task persistence (T1053.005) | Planned |
+| S2 | Scheduled task persistence (T1053.005) | Published |
 | S3 to S8 | To be defined | Planned |
 
 Each scenario will have its own folder under `scenarios/`, with the commands run, the expected events and the Splunk searches that detect them. Detections live under `detections/`, one Markdown file per rule.
